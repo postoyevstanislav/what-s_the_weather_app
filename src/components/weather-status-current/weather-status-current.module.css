@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+
+    border-bottom: 4px solid #333;
+}
+
+.temperature {
+    margin: 0;
+
+    align-self: flex-end;
+    padding-bottom: 30px;
+
+    font-weight: 300;
+    font-size: 60px;
+}
+
+.weatherImg {
+    width: 250px;
+}
