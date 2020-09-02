@@ -13,13 +13,21 @@ export class CitySearch extends Component {
     }
 
     sendData() {
-        this.props.weatherUpdate(this.state.inputValue)
+        const {inputValue} = this.state
+        this.props.currentWeatherUpdate(inputValue)
+        this.props.dailyWeatherUpdate(inputValue)
     }
 
     updateInputValue(event) {
         this.setState({
             inputValue: event.target.value
         });
+    }
+
+    handleKeyPress = (e) => {
+        if(e.key === 'Enter'){
+            this.sendData()
+        }
     }
 
     render() {
@@ -30,12 +38,13 @@ export class CitySearch extends Component {
                        type="text" placeholder="Enter your city name"
                        value={inputValue}
                        onChange={event => this.updateInputValue(event)}
+                       onKeyPress={this.handleKeyPress}
                 />
                 <button className={styles.searchBtn}
                         onClick={() => {
                             this.sendData()
-                        }}
-                >Search</button>
+                        }}>
+                    Search</button>
                 <h3>{this.props.cityName}</h3>
             </div>
         )

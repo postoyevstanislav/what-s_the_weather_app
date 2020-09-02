@@ -1,30 +1,16 @@
-import React from 'react';
+import React, {Component} from 'react';
+import {HourlyWeather} from '../hourly-weather/hourly-weather'
 
 import styles from './weather-status-daily.module.css'
-export const WeatherStatusDaily = () => {
-    return (
-        <div className={styles.mainContainer}>
-            <div className={styles.singleInfo}>
-                <img src={require('../../img/weather-icons/semi-cloud.png')} alt=""/>
-                <p>20°</p>
-            </div>
-            <div className={styles.singleInfo}>
-                <img src={require('../../img/weather-icons/semi-cloud.png')} alt=""/>
-                <p>20°</p>
-            </div>
-            <div className={styles.singleInfo}>
-                <img src={require('../../img/weather-icons/semi-cloud.png')} alt=""/>
-                <p>20°</p>
-            </div>
-            <div className={styles.singleInfo}>
-                <img src={require('../../img/weather-icons/semi-cloud.png')} alt=""/>
-                <p>20°</p>
-            </div>
-            <div className={styles.singleInfo}>
-                <img src={require('../../img/weather-icons/semi-cloud.png')} alt=""/>
-                <p>20°</p>
-            </div>
+export class WeatherStatusDaily extends Component {
 
-        </div>
-    )
+    render() {
+        const {data} = this.props
+        return (
+            <div className={styles.mainContainer}>
+                <HourlyWeather data={data}/>
+            </div>
+        )
+    }
+    
 }

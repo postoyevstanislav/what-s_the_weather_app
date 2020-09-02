@@ -1,14 +1,17 @@
 import React, {Component} from 'react';
 import './App.css'
-
 import {CitySearch} from './components/city-search/city-search';
 import {WeatherStatusCurrent} from './components/weather-status-current/weather-status-current';
-// import {WeatherStatusDaily} from "./components/weather-status-daily/weather-status-daily";
+import {WeatherStatusDaily} from "./components/weather-status-daily/weather-status-daily";
 import {CurrentWeatherInfo} from "./components/current-weather-info/current-weather-info";
+import WeatherServices from "./services/current-weather-data";
+
 
 class App extends Component {
     constructor(props) {
-        super(props);
+        super(props)
+        this.WeatherServices = new WeatherServices()
+        
         this.state = {
             currentWeather: '',
             feelsLike: '',
@@ -16,64 +19,106 @@ class App extends Component {
             pressure: '',
             windSpeed: '',
             weatherStatus: '',
-            city: ''
+            weatherData: [],
+            city: '',
+            error: false
         }
-        this.theWeatherData()
+        this.currentWeatherData()
+        this.getDailyWeatherData()
+
+        // this.WeatherServices.getDailyWeather()
+        //     .then(data => {
+        //         console.log(data.list.slice(0, 5))
+                
+        //     })
     }
 
-    theWeatherData = (dataFromInput = 'Catania') =>  {
+
+    currentWeatherData = (dataFromInput) =>  {
         if(dataFromInput === '') {
             dataFromInput = 'Catania'
-            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${dataFromInput}&units=metric&appid=04a821abadc2707ae3ea7ba96b0287e4`)
-                .then(response => response.json())
+            this.WeatherServices.getCurrentWeather(dataFromInput)
                 .then(data => {
-                    this.setState({
-                        currentWeather: Math.floor(data.main.temp),
-                        feelsLike: data.main.feels_like,
-                        humidity: data.main.humidity,
-                        pressure: data.main.pressure,
-                        windSpeed: data.wind.speed,
-                        weatherStatus: data.weather[0].main,
-                        city: data.name
-                    })
-                })
-        } else {
-            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${dataFromInput}&units=metric&appid=04a821abadc2707ae3ea7ba96b0287e4`)
-                .then(response => response.json())
-                .then(data => {
-                    this.setState({
-                        currentWeather: Math.floor(data.main.temp),
-                        feelsLike: data.main.feels_like,
-                        humidity: data.main.humidity,
-                        pressure: data.main.pressure,
-                        windSpeed: data.wind.speed,
-                        weatherStatus: data.weather[0].main,
-                        city: data.name
-                    })
                     console.log(data)
+                    this.setState(this.WeatherServices.setCurrentWeatherState(data))
+                })
+                
+        } else {
+            this.WeatherServices.getCurrentWeather(dataFromInput)
+                .then(data => {
+                    this.setState(this.WeatherServices.setCurrentWeatherState(data))
+                    console.log(data)
+                })
+                .catch(() => {
+                    this.setState({
+                        error: true
+                    })
                 })
         }
 
     }
 
+    // dailyWeatherData = () => {
+    //     this.WeatherServices.getDailyWeather()
+    //         .then(data => console.log(data))
+    // }
+
+    getDailyWeatherData = (dataFromInput) => {
+        if(dataFromInput === '') {
+            dataFromInput = 'Catania'
+            this.WeatherServices.getDailyWeather(dataFromInput)
+            .then(data => {
+                this.setState({
+                    weatherData: data.list.slice(0, 5)
+                })
+            })
+        
+        } else {
+            this.WeatherServices.getDailyWeather(dataFromInput)
+            .then(data => {
+                this.setState({
+                    weatherData: data.list.slice(0, 5)
+                })
+            })
+            .catch(err => console.log('daily err: ', err))
+        }
+
+    }
 
 
+    
     render() {
-        const {currentWeather, weatherStatus, feelsLike, humidity, pressure, windSpeed, city} = this.state
+        const {currentWeather, weatherStatus, feelsLike, humidity, pressure, windSpeed, weatherData, city, error} = this.state
+        if(error === true) {
+            return(
+                <h3>Upss.. seems like your city not exist, refresh the page and try again</h3> 
+            )
+        }
+
         return (
             <div className="main-container">
                 <h2>What's the weather app</h2>
-
+                
                 <CitySearch
-                    weatherUpdate={this.theWeatherData}
-                    cityName = {city} />
+                    currentWeatherUpdate={this.currentWeatherData}
+                    dailyWeatherUpdate={this.getDailyWeatherData}
+                    cityName = {city} 
+                />
 
-                <WeatherStatusCurrent temp={currentWeather} status={weatherStatus}/>
+                <WeatherStatusCurrent 
+                    temp={currentWeather} 
+                    status={weatherStatus} 
+                />
+                <WeatherStatusDaily
+                    data={weatherData}
+                />
                 <CurrentWeatherInfo
                     feelsLike={feelsLike}
                     humidity={humidity}
                     pressure={pressure}
-                    windSpeed={windSpeed} />
+                    windSpeed={windSpeed} 
+                />
+
             </div>)
     }
 }
