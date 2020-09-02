@@ -13,7 +13,9 @@ export class CitySearch extends Component {
     }
 
     sendData() {
-        this.props.weatherUpdate(this.state.inputValue)
+        const {inputValue} = this.state
+        this.props.currentWeatherUpdate(inputValue)
+        this.props.dailyWeatherUpdate(inputValue)
     }
 
     updateInputValue(event) {

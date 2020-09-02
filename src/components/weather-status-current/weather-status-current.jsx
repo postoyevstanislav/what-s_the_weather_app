@@ -24,7 +24,7 @@ export const WeatherStatusCurrent = (props) => {
                 <p className={styles.temperature}> {props.temp} °</p>
             </div>
         )
-    } else if (props.status === 'Extreme ') {
+    } else if (props.status === 'Extreme') {
         return (
             <div className={styles.container}>
                 <img className={styles.weatherImg} src={require("../../img/weather-icons/thunder.png")} alt=""/>

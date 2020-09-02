@@ -3,19 +3,3 @@
     justify-content: space-between;
 
 }
-
-.singleInfo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.singleInfo img {
-    width: 70px;
-}
-
-.singleInfo p {
-    margin: 0;
-    display: block;
-    font-size: 15px;
-}
