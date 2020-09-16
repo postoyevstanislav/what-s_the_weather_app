@@ -1,53 +1,41 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 
 import styles from './city-search.module.css'
 
 
-export class CitySearch extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            inputValue: ''
-        }
-        this.sendData = this.sendData.bind(this)
-    }
+export const CitySearch = ({currentWeatherUpdate,dailyWeatherUpdate, cityName}) => {
+    
+    const [inputValue, setInputValue] = useState('')
 
-    sendData() {
-        const {inputValue} = this.state
-        this.props.currentWeatherUpdate(inputValue)
-        this.props.dailyWeatherUpdate(inputValue)
+    function cleanInput() {
+        setInputValue('')
     }
-
-    updateInputValue(event) {
-        this.setState({
-            inputValue: event.target.value
-        });
+    
+    function sendData() {
+        currentWeatherUpdate(inputValue)
+        dailyWeatherUpdate(inputValue)
+        cleanInput()
     }
-
-    handleKeyPress = (e) => {
+    
+    function handleKeyPress(e) {
         if(e.key === 'Enter'){
-            this.sendData()
+            sendData()
+            cleanInput()
         }
     }
 
-    render() {
-        const {inputValue} = this.state
-        return(
+    return(
             <div className={styles.container}>
                 <input className={styles.elStyles}
                        type="text" placeholder="Enter your city name"
                        value={inputValue}
-                       onChange={event => this.updateInputValue(event)}
-                       onKeyPress={this.handleKeyPress}
+                       onChange={e => setInputValue(e.target.value)}
+                       onKeyPress={handleKeyPress}
                 />
                 <button className={styles.searchBtn}
-                        onClick={() => {
-                            this.sendData()
-                        }}>
+                        onClick={sendData}>
                     Search</button>
-                <h3>{this.props.cityName}</h3>
+                <h3>{cityName}</h3>
             </div>
         )
     }
-
-}

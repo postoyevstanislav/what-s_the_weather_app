@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import './App.css'
-import {CitySearch} from './components/city-search/city-search';
-import {WeatherStatusCurrent} from './components/weather-status-current/weather-status-current';
-import {WeatherStatusDaily} from "./components/weather-status-daily/weather-status-daily";
-import {CurrentWeatherInfo} from "./components/current-weather-info/current-weather-info";
-import WeatherServices from "./services/current-weather-data";
+import {CitySearch} from '../city-search/city-search';
+import {WeatherStatusCurrent} from '../weather-status-current/weather-status-current';
+import {WeatherStatusDaily} from "../weather-status-daily/weather-status-daily";
+import {CurrentWeatherInfo} from "../current-weather-info/current-weather-info";
+import WeatherServices from "../../services/current-weather-data";
 
 
 class App extends Component {
@@ -25,12 +25,8 @@ class App extends Component {
         }
         this.currentWeatherData()
         this.getDailyWeatherData()
+        this.dailyWeatherData()
 
-        // this.WeatherServices.getDailyWeather()
-        //     .then(data => {
-        //         console.log(data.list.slice(0, 5))
-                
-        //     })
     }
 
 
@@ -42,12 +38,11 @@ class App extends Component {
                     console.log(data)
                     this.setState(this.WeatherServices.setCurrentWeatherState(data))
                 })
-                
         } else {
             this.WeatherServices.getCurrentWeather(dataFromInput)
                 .then(data => {
                     this.setState(this.WeatherServices.setCurrentWeatherState(data))
-                    console.log(data)
+                    console.log('currentWeatherData: ', data)
                 })
                 .catch(() => {
                     this.setState({
@@ -58,27 +53,22 @@ class App extends Component {
 
     }
 
-    // dailyWeatherData = () => {
-    //     this.WeatherServices.getDailyWeather()
-    //         .then(data => console.log(data))
-    // }
+    dailyWeatherData = () => {
+        this.WeatherServices.getDailyWeather()
+            .then(data => console.log('fiveDaysApi: ', data))
+    }
 
     getDailyWeatherData = (dataFromInput) => {
         if(dataFromInput === '') {
             dataFromInput = 'Catania'
             this.WeatherServices.getDailyWeather(dataFromInput)
             .then(data => {
-                this.setState({
-                    weatherData: data.list.slice(0, 5)
-                })
+                this.setState(this.WeatherServices.setHourlyWeatherState(data))
             })
-        
         } else {
             this.WeatherServices.getDailyWeather(dataFromInput)
             .then(data => {
-                this.setState({
-                    weatherData: data.list.slice(0, 5)
-                })
+                this.setState(this.WeatherServices.setHourlyWeatherState(data))
             })
             .catch(err => console.log('daily err: ', err))
         }
@@ -91,7 +81,7 @@ class App extends Component {
         const {currentWeather, weatherStatus, feelsLike, humidity, pressure, windSpeed, weatherData, city, error} = this.state
         if(error === true) {
             return(
-                <h3>Upss.. seems like your city not exist, refresh the page and try again</h3> 
+                <h3>Oops.. seems like your city does not exist,<br/> please reload the page and try again</h3> 
             )
         }
 
@@ -111,12 +101,14 @@ class App extends Component {
                 />
                 <WeatherStatusDaily
                     data={weatherData}
+                    status={weatherStatus} 
                 />
                 <CurrentWeatherInfo
                     feelsLike={feelsLike}
                     humidity={humidity}
                     pressure={pressure}
-                    windSpeed={windSpeed} 
+                    windSpeed={windSpeed}
+                    
                 />
 
             </div>)

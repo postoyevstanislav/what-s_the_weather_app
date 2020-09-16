@@ -24,4 +24,13 @@ export default class WeatherServices {
             city: data.name
         }
     }
+    setHourlyWeatherState = (data) => {
+        return{
+            weatherData: data.list.slice(0, 5),
+            // feelsLike: data.list.feels_like,
+            // humidity: data.list.humidity,
+            // pressure: data.list.pressure,
+            // windSpeed: data.wind.speed
+        }
+    }
 }

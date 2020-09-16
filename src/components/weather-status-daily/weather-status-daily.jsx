@@ -5,10 +5,13 @@ import styles from './weather-status-daily.module.css'
 export class WeatherStatusDaily extends Component {
 
     render() {
-        const {data} = this.props
+        const {data, status} = this.props
         return (
             <div className={styles.mainContainer}>
-                <HourlyWeather data={data}/>
+                <HourlyWeather 
+                    data={data}
+                    status={status}
+                />
             </div>
         )
     }
