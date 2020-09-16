@@ -2,6 +2,7 @@ import React from 'react';
 
 import styles from './weather-status-current.module.css'
 
+
 export const WeatherStatusCurrent = (props) => {
     if(props.status === 'Clear') {
         return (
@@ -40,4 +41,27 @@ export const WeatherStatusCurrent = (props) => {
         )
     }
 
+    
+                
 }
+
+// const WeatherIcon = {
+//         'Clear': 'sun',
+//         'Rain': 'rainy',
+//         'Snow': 'snow',
+//         'Extreme': 'thunder',
+//         'Clouds': 'cloud'
+//     }
+// export const WeatherStatusCurrent = ({status, temp}) => {
+    
+//         if(status) {
+
+//         return(
+//                 <div className={styles.container}>
+//                     <img className={styles.weatherImg} src={require(`../../img/weather-icons/${WeatherIcon[status]}.png`)} alt=""/>
+//                     <p className={styles.temperature}> {temp}°</p>
+//                 </div>
+//             )
+//         }
+        
+// }

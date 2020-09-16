@@ -18,3 +18,7 @@
 .singleInfo h4 {
     margin: 0
 }
+
+.active {
+    background-color: #bfe4f8;
+}
